@@ -12,14 +12,3 @@ export function StatusBar() {
   );
 }
 
-export function InputBar({ onSubmit, disabled = false }: Props) {
-  return (
-    <box width="100%" alignItems="center">
-      <text fg="cyan">Input...</text>
-      <text attributes={TextAttributes.DIM} fg="gray">
-        &#8250;
-      </text>
-      <text>src/index.ts</text>
-    </box>
-  );
-}

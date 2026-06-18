@@ -34,7 +34,7 @@ export function CommandMenu({
     );
 
   return (
-    <scrollobx ref={scrollRef} height={visibleHeight}>
+    <scrollbox ref={scrollRef} height={visibleHeight}>
       {filtered.map((cmd, i) => {
         const isSelected = i === selectedIndex;
 
@@ -62,6 +62,6 @@ export function CommandMenu({
           </box>
         );
       })}
-    </scrollobx>
+    </scrollbox>
   );
 }

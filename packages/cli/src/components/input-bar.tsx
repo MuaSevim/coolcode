@@ -36,17 +36,19 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
           width="100%"
           gap={1}
         >
-          (true && (
-          <box
-            position="absolute"
-            bottom="100%"
-            left={0}
-            width="100%"
-            backgroundColor="#1a1a24"
-            zIndex={10}
-          ></box>
-          ))
-          <CommandMenu />
+          {true && (
+            <box
+              position="absolute"
+              bottom="100%"
+              left={0}
+              width="100%"
+              backgroundColor="#1a1a24"
+              zIndex={10}
+            >
+              <CommandMenu query="" selectedIndex={0}/>
+            </box>
+          )}
+
           <textarea
             focused={!disabled}
             placeholder="Ask anything..."

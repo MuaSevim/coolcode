@@ -73,10 +73,25 @@ export function useCommandMenu(): UseCommandMenuReturn {
         setSelectedIndex((i: number) => {
           const newIndex = Math.max(0, i - 1);
 
-          const sb = scrollRef.current;
+          const sb = scrollRef.current; 
           if (sb && newIndex < sb.scrollTop) {
             sb.scrollTo(newIndex);
+          } else if (key.name === "down") {
+            key.preventDefault();
+            setSelectedIndex((i: number) => {
+              if (filteredCommands.length === 0) {
+                return 0;
+              }
+
+              const newIndex = Math.min(filteredCommands.length - 1, i + 1);
+              const sb = scrollRef.current;
+              if(sb){
+                
+              }
+            });
           }
+
+          return i;
         });
       }
     });

@@ -1,7 +1,12 @@
+import { useRef, useCallback, useEffect } from "react";
+import { TextareaRenderable } from "@opentui/core";
+import { useRenderer } from "@opentui/react";
 import { EmptyBorder } from "./border";
-import { CommandMenu } from "./command-menu";
 import { StatusBar } from "./status-bar";
 import type { KeyBinding } from "@opentui/core";
+import { CommandMenu } from "./command-menu";
+import type { Command } from "./command-menu/types";
+import { useCommandMenu } from "./command-menu/use-command-menu";
 
 type Props = {
   onSubmit: (value: string) => void;
@@ -19,6 +24,88 @@ export const TEXTAREA_KEY_BINDINGS: KeyBinding[] = [
 ];
 
 export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
+  // useRef is an alternative way of connecting/linking an element to the DOM
+  // You need to explicitly define link the connection between the variable and the element tho
+  const textareaRef = useRef<TextareaRenderable>(null);
+  const onSubmitRef = useRef<() => void>(() => {});
+  const renderer = useRenderer();
+
+  const {
+    showCommandMenu,
+    commandQuery,
+    selectedIndex,
+    scrollRef,
+    handleContentChange,
+    resolveCommand,
+    setSelectedIndex,
+  } = useCommandMenu();
+
+  const handleCommandExecute = useCallback((index: number) => {
+    const command = resolveCommand(index);
+    handleCommand(command);
+  }, []);
+
+  const handleTextareaContentChange = useCallback(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    handleContentChange(textarea.plainText);
+  }, []);
+
+  // Wiring up the textarea submit handler so it always reads the latest state
+  useEffect(() => {
+    const textArea = textareaRef.current;
+    if (!textArea) return;
+
+    textArea.onSubmit = () => {
+      onSubmitRef.current();
+    };
+  }, []);
+
+  const handleSubmit = useCallback(() => {
+    if (disabled) return;
+
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const text = textarea.plainText.trim();
+    if (text.length === 0) return;
+
+    onSubmit(text);
+  }, [disabled, onSubmit]);
+
+  const handleCommand = useCallback(
+    (command: Command | undefined) => {
+      const textArea = textareaRef.current;
+
+      if (!textArea || !command) return;
+
+      // reset the ui
+      textArea.setText("");
+
+      if (command.action) {
+        command.action({
+          exit: () => renderer.destroy(),
+        });
+      } else {
+        textArea.insertText(command.value + " ");
+      }
+    },
+    [renderer],
+  );
+
+  onSubmitRef.current = () => {
+    if (disabled) return;
+
+    if (showCommandMenu) {
+      const command = resolveCommand(selectedIndex);
+      handleCommand(command);
+      return;
+    }
+
+    handleSubmit();
+  };
+
   return (
     <box width="100%" alignItems="center">
       <box
@@ -36,7 +123,7 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
           width="100%"
           gap={1}
         >
-          {true && (
+          {showCommandMenu && (
             <box
               position="absolute"
               bottom="100%"
@@ -45,13 +132,21 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
               backgroundColor="#1a1a24"
               zIndex={10}
             >
-              <CommandMenu query="" selectedIndex={0}/>
+              <CommandMenu
+                query={commandQuery}
+                selectedIndex={selectedIndex}
+                scrollRef={scrollRef}
+                onSelect={setSelectedIndex}
+                onExecute={handleCommandExecute}
+              />
             </box>
           )}
 
           <textarea
+            ref={textareaRef}
             focused={!disabled}
             placeholder="Ask anything..."
+            onContentChange={handleTextareaContentChange}
             keyBindings={TEXTAREA_KEY_BINDINGS}
           />
           <StatusBar />

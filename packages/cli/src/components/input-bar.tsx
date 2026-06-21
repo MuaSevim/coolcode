@@ -40,10 +40,33 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
     setSelectedIndex,
   } = useCommandMenu();
 
-  const handleCommandExecute = useCallback((index: number) => {
-    const command = resolveCommand(index);
-    handleCommand(command);
-  }, []);
+  const handleCommand = useCallback(
+    (command: Command | undefined) => {
+      const textArea = textareaRef.current;
+
+      if (!textArea || !command) return;
+
+      // reset the ui
+      textArea.setText("");
+
+      if (command.action) {
+        command.action({
+          exit: () => renderer.destroy(),
+        });
+      } else {
+        textArea.insertText(command.value + " ");
+      }
+    },
+    [renderer],
+  );
+
+  const handleCommandExecute = useCallback(
+    (index: number) => {
+      const command = resolveCommand(index);
+      handleCommand(command);
+    },
+    [handleCommand, resolveCommand],
+  );
 
   const handleTextareaContentChange = useCallback(() => {
     const textarea = textareaRef.current;
@@ -73,26 +96,6 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
 
     onSubmit(text);
   }, [disabled, onSubmit]);
-
-  const handleCommand = useCallback(
-    (command: Command | undefined) => {
-      const textArea = textareaRef.current;
-
-      if (!textArea || !command) return;
-
-      // reset the ui
-      textArea.setText("");
-
-      if (command.action) {
-        command.action({
-          exit: () => renderer.destroy(),
-        });
-      } else {
-        textArea.insertText(command.value + " ");
-      }
-    },
-    [renderer],
-  );
 
   onSubmitRef.current = () => {
     if (disabled) return;

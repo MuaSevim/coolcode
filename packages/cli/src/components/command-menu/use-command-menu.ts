@@ -70,11 +70,6 @@ export function useCommandMenu(): UseCommandMenuReturn {
     } else if (key.name === "up") {
       key.preventDefault();
 
-      // If it's already at top of the list, return
-      if (selectedIndex === 0) {
-        return;
-      }
-
       // Update the index
       setSelectedIndex((i: number) => {
         // New index must be at least "0", can't be smaller than 0th index. Extra protection layer.
@@ -95,7 +90,7 @@ export function useCommandMenu(): UseCommandMenuReturn {
       key.preventDefault();
 
       setSelectedIndex((i: number) => {
-        if (filteredCommands.length === 0) {
+        if (filteredCommands.length === 0) { 
           return 0;
         }
 

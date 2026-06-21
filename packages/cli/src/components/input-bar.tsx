@@ -110,7 +110,7 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
     <box width="100%" alignItems="center">
       <box
         border={["left"]}
-        borderColor="cyan"
+        borderColor={disabled ? "#30363D" : "#F85149"}
         customBorderChars={{ ...EmptyBorder, vertical: "│" }}
         width="100%"
       >
@@ -119,7 +119,7 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
           justifyContent="center"
           paddingX={2}
           paddingY={1}
-          backgroundColor="#1A1A24"
+          backgroundColor="#0D1117"
           width="100%"
           gap={1}
         >
@@ -129,7 +129,7 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
               bottom="100%"
               left={0}
               width="100%"
-              backgroundColor="#1a1a24"
+              backgroundColor="#161B22"
               zIndex={10}
             >
               <CommandMenu

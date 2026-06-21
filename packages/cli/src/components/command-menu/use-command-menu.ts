@@ -56,9 +56,8 @@ export function useCommandMenu(): UseCommandMenuReturn {
 
     if (command) {
       close();
-    } else {
-      return command;
     }
+    return command;
   };
 
   // Arrow keys move selection;
@@ -110,7 +109,7 @@ export function useCommandMenu(): UseCommandMenuReturn {
           const visibleEnd = sb.scrollTop + viewportHeight - 1;
 
           if (newIndex > visibleEnd) {
-            sb.scrollTo(newIndex);
+            sb.scrollTo(newIndex - viewportHeight + 1);
           }
         }
 

@@ -1,12 +1,14 @@
 import { useRef, useCallback, useEffect } from "react";
 import { TextareaRenderable } from "@opentui/core";
-import { useRenderer } from "@opentui/react";
+import { useKeyboard, useRenderer } from "@opentui/react";
 import { EmptyBorder } from "./border";
 import { StatusBar } from "./status-bar";
 import type { KeyBinding } from "@opentui/core";
 import { CommandMenu } from "./command-menu";
 import type { Command } from "./command-menu/types";
 import { useCommandMenu } from "./command-menu/use-command-menu";
+import { useToast } from "../providers/toast";
+import { useKeyboardLayer } from "../providers/keyboard-layer";
 
 type Props = {
   onSubmit: (value: string) => void;
@@ -29,6 +31,8 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
   const textareaRef = useRef<TextareaRenderable>(null);
   const onSubmitRef = useRef<() => void>(() => {});
   const renderer = useRenderer();
+  const toast = useToast();
+  const { isTopLayer, setResponder } = useKeyboardLayer();
 
   const {
     showCommandMenu,
@@ -52,12 +56,13 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
       if (command.action) {
         command.action({
           exit: () => renderer.destroy(),
+          toast,
         });
       } else {
         textArea.insertText(command.value + " ");
       }
     },
-    [renderer],
+    [renderer, toast],
   );
 
   const handleCommandExecute = useCallback(
@@ -108,6 +113,24 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
 
     handleSubmit();
   };
+
+  // Registering the base layer responder
+  useEffect(() => {
+    setResponder("base", () => {
+      if (disabled) return false;
+
+      const textarea = textareaRef.current;
+
+      if (textarea && textarea.plainText.length > 0) {
+        textarea.setText("");
+        return true;
+      }
+
+      return false;
+    });
+
+    return () => setResponder("base", null);
+  }, [disabled, setResponder]);
 
   return (
     <box width="100%" alignItems="center">

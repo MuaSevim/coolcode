@@ -10,6 +10,7 @@ import { useTerminalDimensions } from "@opentui/react";
 import type { ToastOptions, ToastVariant } from "./types";
 import { DEFAULT_DURATION } from "./types";
 import { WatchDirectoryFlags } from "typescript";
+import { SplitBorderChars } from "../../components/border";
 
 export type ToastContextValue = {
   show: (options: ToastOptions) => void;
@@ -83,8 +84,8 @@ function Toast({ currentToast }: ToastProps) {
 
   const variantColors: Record<ToastVariant, string> = {
     success: "#82E0AA",
-    error: "#E74C5E",
-    info: "#56D6C2",
+    error: "#DC143C",
+    info: "#F85149",
   };
 
   const borderColor = currentToast.variant
@@ -106,7 +107,7 @@ function Toast({ currentToast }: ToastProps) {
       backgroundColor="#1a1a24"
       borderColor={borderColor}
       border={["left", "right"]}
-      // Split border will be added
+      customBorderChars={SplitBorderChars}
     >
       <box flexDirection="column" gap={1} width="100%">
         <text fg="#e1e1e1" wrapMode="word" width="100%">

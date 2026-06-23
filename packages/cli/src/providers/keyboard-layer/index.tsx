@@ -11,7 +11,7 @@ import { useKeyboard, useRenderer } from "@opentui/react";
 type Responder = () => boolean;
 
 // Detecting the currently active layer over the multiple dialog pop-ups and windows.
-// Based on what's active the keyboards will be effective over theme.
+// Based on what's active the keyboards will be effective over them.
 type KeyboardLayerContextValue = {
   push: (id: string, responder?: Responder) => void;
   pop: (id: string) => void;
@@ -85,6 +85,7 @@ export function KeyboardLayerProvider({
 
     // No responder handled it - exit
     renderer.destroy();
+    process.exit(0);
   });
 
   return (

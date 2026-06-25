@@ -32,6 +32,7 @@ export function useCommandMenu(): UseCommandMenuReturn {
 
   const close = () => {
     setShowCommandMenu(false);
+    pop("command");
   };
 
   // Any time user changes a single character in the "terminal"
@@ -49,13 +50,11 @@ export function useCommandMenu(): UseCommandMenuReturn {
       setShowCommandMenu(true);
 
       push("command", () => {
-        setShowCommandMenu(false);
-        pop("command");
+        close();
         return true;
       });
     } else {
-      setShowCommandMenu(false);
-      pop("command");
+      close();
     }
   };
 
@@ -64,7 +63,6 @@ export function useCommandMenu(): UseCommandMenuReturn {
     const command = filteredCommands[index];
     if (command) {
       close();
-      pop("command");
     }
     return command;
   };
@@ -75,8 +73,7 @@ export function useCommandMenu(): UseCommandMenuReturn {
 
     if (key.name === "escape") {
       key.preventDefault();
-      setShowCommandMenu(false);
-      pop("command");
+      close();
     } else if (key.name === "up") {
       key.preventDefault();
 

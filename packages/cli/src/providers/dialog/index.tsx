@@ -60,7 +60,8 @@ export function DialogProvider({ children }: DialogProviderProps) {
 
   return (
     <DialogContext.Provider value={value}>
-      {children} <Dialog currentDialog={currentDialog} close={close} />
+      {children}
+      <Dialog currentDialog={currentDialog} close={close} />
     </DialogContext.Provider>
   );
 }
@@ -123,3 +124,4 @@ function Dialog({ currentDialog, close }: DialogProps) {
     </box>
   );
 }
+

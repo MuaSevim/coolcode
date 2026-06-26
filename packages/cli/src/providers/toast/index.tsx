@@ -11,6 +11,7 @@ import type { ToastOptions, ToastVariant } from "./types";
 import { DEFAULT_DURATION } from "./types";
 import { WatchDirectoryFlags } from "typescript";
 import { SplitBorderChars } from "../../components/border";
+import { useTheme } from "../theme";
 
 export type ToastContextValue = {
   show: (options: ToastOptions) => void;
@@ -77,15 +78,16 @@ type ToastProps = {
 
 function Toast({ currentToast }: ToastProps) {
   const { width } = useTerminalDimensions();
+  const { colors } = useTheme();
 
   if (!currentToast) {
     return null;
   }
 
   const variantColors: Record<ToastVariant, string> = {
-    success: "#82E0AA",
-    error: "#DC143C",
-    info: "#F85149",
+    success: colors.success,
+    error: colors.error,
+    info: colors.info,
   };
 
   const borderColor = currentToast.variant
@@ -104,7 +106,7 @@ function Toast({ currentToast }: ToastProps) {
       paddingRight={2}
       paddingTop={1}
       paddingBottom={1}
-      backgroundColor="#1a1a24"
+      backgroundColor={colors.surface}
       borderColor={borderColor}
       border={["left", "right"]}
       customBorderChars={SplitBorderChars}

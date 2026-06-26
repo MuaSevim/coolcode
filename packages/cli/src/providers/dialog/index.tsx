@@ -11,6 +11,7 @@ import type { ReactNode } from "react";
 import type { DialogConfig } from "./types";
 import { useKeyboardLayer } from "../keyboard-layer";
 import { RGBA, TextAttributes } from "@opentui/core";
+import { useTheme } from "../theme";
 
 // Creating the types for the "commands" inherit it
 export type DialogContextValue = {
@@ -74,6 +75,7 @@ type DialogProps = {
 function Dialog({ currentDialog, close }: DialogProps) {
   const { isTopLayer } = useKeyboardLayer();
   const dimensions = useTerminalDimensions();
+  const { colors } = useTheme();
 
   useKeyboard((key) => {
     if (!currentDialog || !isTopLayer("dialog")) return;
@@ -101,7 +103,7 @@ function Dialog({ currentDialog, close }: DialogProps) {
       <box
         width={Math.min(60, dimensions.width - 4)}
         height="auto"
-        backgroundColor="#1a1a24"
+        backgroundColor={colors.dialogSurface}
         paddingX={4}
         paddingY={1}
         flexDirection="column"
@@ -124,4 +126,3 @@ function Dialog({ currentDialog, close }: DialogProps) {
     </box>
   );
 }
-

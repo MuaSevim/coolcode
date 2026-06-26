@@ -26,7 +26,7 @@ export function Header({ primary }: HeaderProps) {
         <text fg="#8B949E" attributes={TextAttributes.DIM}>
           │
         </text>
-        <text fg="#238636">online</text>
+        <text fg="#238636">● online</text>
       </box>
     </box>
   );

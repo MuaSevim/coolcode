@@ -140,7 +140,7 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
   return (
     <box width="100%" alignItems="center">
       <box
-        border={["left"]}
+        border={[""]}
         borderColor={colors.primary}
         customBorderChars={{ ...EmptyBorder, vertical: "│" }}
         width="100%"
@@ -176,7 +176,7 @@ export function InputBar({ onSubmit, onCommand, disabled = false }: Props) {
           <textarea
             ref={textareaRef}
             focused={!disabled && (isTopLayer("base") || isTopLayer("command"))}
-            placeholder="Ask anything..."
+            placeholder="Type '/' to see the commands..."
             onContentChange={handleTextareaContentChange}
             keyBindings={TEXTAREA_KEY_BINDINGS}
           />
